@@ -8,6 +8,10 @@ A light and easy to use AJAX uploader.
 
 ### NPM
 
+```
+npm install colibri.js
+```
+
 ### Standalone
 
 Import CSS:
