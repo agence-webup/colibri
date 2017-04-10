@@ -18,7 +18,7 @@
   transform: scale3d(1,1,1);
 }
 
-.colibri__label {
+.colibri > label {
   position: absolute;
   top: 0;
   right: 0;
@@ -90,6 +90,15 @@
   fill: #fff;
 }
 
+/* during upload
+-------------------------------------------------------------- */
+
+.colibri--duringUpload > label {
+  display: flex;
+  background-color: rgba(0, 0, 0, .8);
+  color: #fff;
+}
+
 /* dragover
 -------------------------------------------------------------- */
 
@@ -98,7 +107,7 @@
   color: #fff;
 }
 
-.colibri--dragover .colibri__label {
+.colibri--dragover > label {
   display: flex;
   background-color: rgba(0, 0, 0, .8);
   color: #fff;

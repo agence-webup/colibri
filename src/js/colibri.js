@@ -52,18 +52,6 @@ class Colibri {
         return container;
     }
 
-
-    _isDescendant(parent, child) {
-        var node = child.parentNode;
-        do {
-            if (node === parent) {
-                return true;
-            }
-            node = node.parentNode;
-        } while (node != null);
-        return false;
-    }
-
     listen() {
 
         this.enterTarget = null;
@@ -75,8 +63,6 @@ class Colibri {
         });
 
         this.target.addEventListener('dragenter', (e) => {
-            console.log('dragenter');
-
             // cache enter target
             this.enterTarget = e.target;
 
@@ -106,7 +92,6 @@ class Colibri {
         });
 
         this.target.addEventListener('drop', (e) => {
-            console.log('drop');
             e.preventDefault();
             e.stopPropagation();
             this.target.classList.remove('colibri--dragover');
@@ -115,7 +100,6 @@ class Colibri {
     }
 
     uploadAttempt(file) {
-        console.log('uploadAttempt');
         var formData = new FormData();
         formData.append('picture', file);
 
@@ -157,6 +141,14 @@ class Colibri {
             break;
 
             case "duringUpload":
+
+            // dark bg if there already is a picture
+            if(this.currentUi === AFTER_UPLOAD) {
+                this.target.classList.add('colibri--duringUpload');
+            }
+
+            this.target.classList.remove('colibri--afterUpload');
+
             if(this.currentUi !== DURING_UPLOAD) {
                 this.ui.label.replaceChild(this.ui.loadingContent, this.ui.labelContent);
             }
@@ -165,6 +157,7 @@ class Colibri {
 
             case "afterUpload":
             this.currentUi = AFTER_UPLOAD;
+            this.target.classList.remove('colibri--duringUpload');
             this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
             this.target.style.backgroundImage = "url(" + this.imageUrl + ")";
             this.target.classList.add('colibri--afterUpload');

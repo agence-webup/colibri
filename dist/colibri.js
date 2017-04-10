@@ -61,18 +61,6 @@ var Colibri = function () {
             return container;
         }
     }, {
-        key: "_isDescendant",
-        value: function _isDescendant(parent, child) {
-            var node = child.parentNode;
-            do {
-                if (node === parent) {
-                    return true;
-                }
-                node = node.parentNode;
-            } while (node != null);
-            return false;
-        }
-    }, {
         key: "listen",
         value: function listen() {
             var _this = this;
@@ -86,8 +74,6 @@ var Colibri = function () {
             });
 
             this.target.addEventListener('dragenter', function (e) {
-                console.log('dragenter');
-
                 // cache enter target
                 _this.enterTarget = e.target;
 
@@ -116,7 +102,6 @@ var Colibri = function () {
             });
 
             this.target.addEventListener('drop', function (e) {
-                console.log('drop');
                 e.preventDefault();
                 e.stopPropagation();
                 _this.target.classList.remove('colibri--dragover');
@@ -128,7 +113,6 @@ var Colibri = function () {
         value: function uploadAttempt(file) {
             var _this2 = this;
 
-            console.log('uploadAttempt');
             var formData = new FormData();
             formData.append('picture', file);
 
@@ -169,6 +153,14 @@ var Colibri = function () {
                     break;
 
                 case "duringUpload":
+
+                    // dark bg if there already is a picture
+                    if (this.currentUi === AFTER_UPLOAD) {
+                        this.target.classList.add('colibri--duringUpload');
+                    }
+
+                    this.target.classList.remove('colibri--afterUpload');
+
                     if (this.currentUi !== DURING_UPLOAD) {
                         this.ui.label.replaceChild(this.ui.loadingContent, this.ui.labelContent);
                     }
@@ -177,6 +169,7 @@ var Colibri = function () {
 
                 case "afterUpload":
                     this.currentUi = AFTER_UPLOAD;
+                    this.target.classList.remove('colibri--duringUpload');
                     this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
                     this.target.style.backgroundImage = "url(" + this.imageUrl + ")";
                     this.target.classList.add('colibri--afterUpload');
