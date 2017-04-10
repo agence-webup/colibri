@@ -9,7 +9,7 @@ A light and easy to use AJAX uploader.
 ### NPM
 
 ```
-npm install colibri.js
+$ npm install --save colibri.js
 ```
 
 ### Standalone
@@ -75,7 +75,7 @@ Another example (PHP):
 There is already a small express server capable of receiving the upload.
 
 ```bash
-npm install
-npm run dev
+$ npm install
+$ npm run dev
 ```
 
