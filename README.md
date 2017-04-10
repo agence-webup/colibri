@@ -1,6 +1,7 @@
 # Colibri
 
-A light and easy to use AJAX uploader.
+A light and easy to use AJAX uploader fully customizable via HTML and CSS.  
+  
 
 ![](https://media.giphy.com/media/l4FGp62U3cIVgrTxu/giphy.gif)
 
