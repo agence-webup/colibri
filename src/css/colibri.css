@@ -1,9 +1,12 @@
+.colibri,
+.colibri > label {
+  border-radius: 4px;
+}
+
 .colibri {
   position: relative;
   width: 320px;
   height: 213px;
-  border: 1px dashed #979797;
-  border-radius: 4px;
   background: #fafafa;
   background-position: center;
   background-size: contain;
@@ -22,6 +25,7 @@
   bottom: 0;
   left: 0;
   display: flex;
+  border: 1px dashed #979797;
   text-align: center;
   cursor: pointer;
 
@@ -65,14 +69,12 @@
   background-color: #42a5f5;
 }
 
-
 /* after upload
 -------------------------------------------------------------- */
 
 .colibri--afterUpload {
   background-color: #000;
 }
-
 
 .colibri--afterUpload .colibri__label {
   display: none;
@@ -85,5 +87,25 @@
 }
 
 .colibri--afterUpload .colibri__label svg {
+  fill: #fff;
+}
+
+/* dragover
+-------------------------------------------------------------- */
+
+.colibri--dragover {
+  background-color: rgba(0, 0, 0, .5);
+  color: #fff;
+}
+
+.colibri--dragover .colibri__label {
+  display: flex;
+  background-color: rgba(0, 0, 0, .8);
+  color: #fff;
+}
+
+.colibri--dragover svg {
+  transition: none;
+
   fill: #fff;
 }

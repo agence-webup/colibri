@@ -1,14 +1,19 @@
 "use strict";
+const BEFORE_UPLOAD = 1;
+const DURING_UPLOAD = 2;
+const AFTER_UPLOAD = 3;
 
 class Colibri {
 
     constructor(target, options) {
         this.target = document.querySelector(target);
 
+        this.currentUi = BEFORE_UPLOAD;
+
         this.postUrl = this.target.dataset.post;
 
         // afterUpload mode
-        if(this.target.dataset.pic) {
+        if (this.target.dataset.pic) {
             this.imageUrl = this.target.dataset.pic;
             this.switchUI("afterUpload");
         } else {
@@ -17,7 +22,6 @@ class Colibri {
 
         let progress = this._createProgress();
         let loadingContent = this._createLoadingContent(progress);
-
 
         this.ui = {
             input: this.target.querySelector('input'),
@@ -48,16 +52,72 @@ class Colibri {
         return container;
     }
 
+
+    _isDescendant(parent, child) {
+        var node = child.parentNode;
+        do {
+            if (node === parent) {
+                return true;
+            }
+            node = node.parentNode;
+        } while (node != null);
+        return false;
+    }
+
     listen() {
+
+        this.enterTarget = null;
+
         // on new file
         this.ui.input.addEventListener('change', () => {
-            this.uploadAttempt();
+            if(!this.ui.input.files[0]) return;
+            this.uploadAttempt(this.ui.input.files[0]);
+        });
+
+        this.target.addEventListener('dragenter', (e) => {
+            console.log('dragenter');
+
+            // cache enter target
+            this.enterTarget = e.target;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.target.classList.remove('colibri--afterUpload');
+            this.target.classList.add('colibri--dragover');
+
+        });
+
+        this.target.addEventListener('dragleave', (e) => {
+            event.stopPropagation();
+            event.preventDefault();
+            if (this.enterTarget == e.target){
+                this.target.classList.remove('colibri--dragover');
+                if(this.currentUi == AFTER_UPLOAD) {
+                    this.target.classList.add('colibri--afterUpload');
+                }
+            }
+        });
+
+        // mandatory since we need to ignore default behavior (open file) on drop
+        this.target.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        this.target.addEventListener('drop', (e) => {
+            console.log('drop');
+            e.preventDefault();
+            e.stopPropagation();
+            this.target.classList.remove('colibri--dragover');
+            this.uploadAttempt(e.dataTransfer.files[0]);
         });
     }
 
-    uploadAttempt() {
+    uploadAttempt(file) {
+        console.log('uploadAttempt');
         var formData = new FormData();
-        formData.append('picture', this.ui.input.files[0]);
+        formData.append('picture', file);
 
         // sitch to upload state
         this.switchUI('duringUpload');
@@ -73,7 +133,7 @@ class Colibri {
             }
         });
 
-        xhr.open('POST',this.postUrl, true);
+        xhr.open('POST', this.postUrl, true);
 
         xhr.onload = () => {
             if (xhr.status === 200) {
@@ -93,17 +153,21 @@ class Colibri {
     switchUI(state) {
         switch (state) {
             case "beforeUpload":
-
+            this.currentUi = BEFORE_UPLOAD;
             break;
 
             case "duringUpload":
-            this.ui.label.replaceChild(this.ui.loadingContent, this.ui.labelContent);
+            if(this.currentUi !== DURING_UPLOAD) {
+                this.ui.label.replaceChild(this.ui.loadingContent, this.ui.labelContent);
+            }
+            this.currentUi = DURING_UPLOAD;
             break;
 
             case "afterUpload":
-                this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
-                this.target.style.backgroundImage = "url(" + this.imageUrl + ")";
-                this.target.classList.add('colibri--afterUpload');
+            this.currentUi = AFTER_UPLOAD;
+            this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
+            this.target.style.backgroundImage = "url(" + this.imageUrl + ")";
+            this.target.classList.add('colibri--afterUpload');
             break;
 
             default:
