@@ -76,17 +76,17 @@
   background-color: #000;
 }
 
-.colibri--afterUpload .colibri__label {
+.colibri--afterUpload > label {
   display: none;
 }
 
-.colibri--afterUpload:hover .colibri__label {
+.colibri--afterUpload:hover > label {
   display: flex;
   background-color: rgba(0, 0, 0, .5);
   color: #fff;
 }
 
-.colibri--afterUpload .colibri__label svg {
+.colibri--afterUpload svg {
   fill: #fff;
 }
 

@@ -9,15 +9,34 @@ var BEFORE_UPLOAD = 1;
 var DURING_UPLOAD = 2;
 var AFTER_UPLOAD = 3;
 
+var CSS = {
+    afterUpload: 'colibri--afterUpload',
+    duringUpload: 'colibri--duringUpload',
+    dragover: 'colibri--dragover'
+};
+
 var Colibri = function () {
-    function Colibri(target, options) {
+    function Colibri(target) {
         _classCallCheck(this, Colibri);
 
-        this.target = document.querySelector(target);
-
+        this.target = typeof target === 'string' ? document.querySelector(target) : target;
+        this.postUrl = this.target.dataset.post;
         this.currentUi = BEFORE_UPLOAD;
 
-        this.postUrl = this.target.dataset.post;
+        // build dom elements
+        var progress = this._createProgress();
+        var input = this.target.querySelector('input[type="file"]');
+        var message = input.dataset.message ? input.dataset.message : 'Upload in progress...';
+        var loadingContent = this._createLoadingContent(progress, message);
+
+        // cache UI
+        this.ui = {
+            input: input,
+            progress: progress,
+            label: this.target.querySelector('label'),
+            labelContent: this.target.querySelector('label > div'),
+            loadingContent: loadingContent
+        };
 
         // afterUpload mode
         if (this.target.dataset.pic) {
@@ -27,23 +46,12 @@ var Colibri = function () {
             this.imageUrl = null;
         }
 
-        var progress = this._createProgress();
-        var loadingContent = this._createLoadingContent(progress);
-
-        this.ui = {
-            input: this.target.querySelector('input'),
-            progress: progress,
-            label: this.target.querySelector('label'),
-            labelContent: this.target.querySelector('label > div'),
-            loadingContent: loadingContent
-        };
-
-        // events
+        // ready to listen for events
         this.listen();
     }
 
     _createClass(Colibri, [{
-        key: "_createProgress",
+        key: '_createProgress',
         value: function _createProgress() {
             var progress = document.createElement("progress");
             progress.value = 0;
@@ -51,17 +59,17 @@ var Colibri = function () {
             return progress;
         }
     }, {
-        key: "_createLoadingContent",
-        value: function _createLoadingContent(progress) {
+        key: '_createLoadingContent',
+        value: function _createLoadingContent(progress, message) {
             var container = document.createElement('div');
-            var message = document.createElement('div');
-            message.innerHTML = "Téléchargement en cours...";
-            container.appendChild(message);
+            var m = document.createElement('div');
+            m.innerHTML = message;
+            container.appendChild(m);
             container.appendChild(progress);
             return container;
         }
     }, {
-        key: "listen",
+        key: 'listen',
         value: function listen() {
             var _this = this;
 
@@ -80,7 +88,7 @@ var Colibri = function () {
                 e.preventDefault();
                 e.stopPropagation();
 
-                _this.target.classList.remove('colibri--afterUpload');
+                _this.target.classList.remove(CSS.afterUpload);
                 _this.target.classList.add('colibri--dragover');
             });
 
@@ -88,9 +96,9 @@ var Colibri = function () {
                 event.stopPropagation();
                 event.preventDefault();
                 if (_this.enterTarget == e.target) {
-                    _this.target.classList.remove('colibri--dragover');
+                    _this.target.classList.remove(CSS.dragover);
                     if (_this.currentUi == AFTER_UPLOAD) {
-                        _this.target.classList.add('colibri--afterUpload');
+                        _this.target.classList.add(CSS.afterUpload);
                     }
                 }
             });
@@ -104,12 +112,12 @@ var Colibri = function () {
             this.target.addEventListener('drop', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                _this.target.classList.remove('colibri--dragover');
+                _this.target.classList.remove(CSS.dragover);
                 _this.uploadAttempt(e.dataTransfer.files[0]);
             });
         }
     }, {
-        key: "uploadAttempt",
+        key: 'uploadAttempt',
         value: function uploadAttempt(file) {
             var _this2 = this;
 
@@ -145,7 +153,7 @@ var Colibri = function () {
             xhr.send(formData);
         }
     }, {
-        key: "switchUI",
+        key: 'switchUI',
         value: function switchUI(state) {
             switch (state) {
                 case "beforeUpload":
@@ -156,23 +164,24 @@ var Colibri = function () {
 
                     // dark bg if there already is a picture
                     if (this.currentUi === AFTER_UPLOAD) {
-                        this.target.classList.add('colibri--duringUpload');
+                        this.target.classList.add(CSS.duringUpload);
                     }
 
-                    this.target.classList.remove('colibri--afterUpload');
+                    this.target.classList.remove(CSS.afterUpload);
 
                     if (this.currentUi !== DURING_UPLOAD) {
                         this.ui.label.replaceChild(this.ui.loadingContent, this.ui.labelContent);
                     }
+
                     this.currentUi = DURING_UPLOAD;
                     break;
 
                 case "afterUpload":
                     this.currentUi = AFTER_UPLOAD;
-                    this.target.classList.remove('colibri--duringUpload');
+                    this.target.classList.remove(CSS.duringUpload);
                     this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
                     this.target.style.backgroundImage = "url(" + this.imageUrl + ")";
-                    this.target.classList.add('colibri--afterUpload');
+                    this.target.classList.add(CSS.afterUpload);
                     break;
 
                 default:

@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <div class="colibri" id="colibri" data-pic="" data-post="http://localhost:5000/upload">
-            <label for="file" class="colibri__label">
+            <label for="file">
                 <div>
                     <svg class="colibri__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
                         <path d="M69.27 42.085L51.448 20.67c-.437-.523-.95-.714-1.447-.68-.496-.034-1.01.157-1.447.68L30.73 42.086c-1.1 1.32-.462 3.494 1.445 3.494h7.48v32.385c0 1.116.93 2.047 2.046 2.047h16.6c1.115 0 2.046-.93 2.046-2.047V45.58h7.48c1.906 0 2.545-2.176 1.445-3.495z"/>
@@ -19,12 +19,12 @@
                     Choisir ou glisser une photo <br> <span class="smaller">(minimum 1280px de large)</span>
                 </div>
             </label>
-            <input type="file" name="file" id="file">
+            <input type="file" name="file" id="file" data-message="Téléchargement en cours...">
         </div>
     </div>
     <script src="colibri.js"></script>
 </body>
 <script>
-var colibri = new Colibri("#colibri");
+var colibri = new Colibri('.colibri');
 </script>
 </html>
