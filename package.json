@@ -1,7 +1,7 @@
 {
-    "name": "calendar.js",
+    "name": "colibri.js",
     "version": "0.0.1",
-    "description": "A calendar wich is able to display multiple column per day",
+    "description": "A light and easy to use AJAX uploader.",
     "main": "dist/calendar.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,7 +10,7 @@
         "type": "git",
         "url": "git+https://github.com/agence-webup/calendar.git"
     },
-    "author": "",
+    "author": "parisi.robin@gmail.com",
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/agence-webup/calendar/issues"
@@ -33,5 +33,12 @@
     "dependencies": {
         "express": "^4.15.2",
         "formidable": "^1.1.1"
+    },
+    "keywords": [
+        "uploader"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "node demo/server.js & gulp watch"
     }
 }
