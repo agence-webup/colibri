@@ -166,11 +166,13 @@ class Colibri {
             break;
 
             case "afterUpload":
-            this.currentUi = AFTER_UPLOAD;
             this.target.classList.remove(CSS.duringUpload);
-            this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
+            if(this.currentUi === DURING_UPLOAD) {
+                this.ui.label.replaceChild(this.ui.labelContent, this.ui.loadingContent);
+            }
             this.target.style.backgroundImage = "url(" + this.imageUrl + ")";
             this.target.classList.add(CSS.afterUpload);
+            this.currentUi = AFTER_UPLOAD;
             break;
 
             default:
