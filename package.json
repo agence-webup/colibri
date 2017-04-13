@@ -1,6 +1,6 @@
 {
     "name": "colibri.js",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "A light and easy to use AJAX uploader.",
     "main": "dist/calendar.js",
     "scripts": {
