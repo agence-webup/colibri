@@ -43,7 +43,11 @@ Colibri is fully extensible via HTML and CSS and requires just a minimum markup:
 Then instanciate colibri:
 
 ```html
-var colibri = new Colibri('#colibri');
+var colibri = new Colibri('.colibri', {
+    onUploadComplete: function(code, response) {
+        console.log(response);
+    }
+});
 ```
 
 Importants elements:
@@ -53,7 +57,6 @@ Importants elements:
 * **data-post** URL where the post request will be processed
 * **label** put evering you want in it but don't forget the div (mandatory because of flexbox centering system)
 * **input** connect input to label (for attribute) and customize uploading message
-
 
 ## Contribute
 
