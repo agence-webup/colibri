@@ -17,7 +17,15 @@ var CSS = {
 
 var Colibri = function () {
     function Colibri(target) {
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
         _classCallCheck(this, Colibri);
+
+        this.options = options;
+
+        if (typeof options.onUploadComplete !== 'function') {
+            this.options.onUploadComplete = null;
+        }
 
         this.target = typeof target === 'string' ? document.querySelector(target) : target;
         this.postUrl = this.target.dataset.post;
@@ -141,6 +149,12 @@ var Colibri = function () {
             xhr.open('POST', this.postUrl, true);
 
             xhr.onload = function () {
+
+                // callback onUpload
+                if (_this2.options.onUploadComplete !== null) {
+                    _this2.options.onUploadComplete(xhr.status, xhr.response);
+                }
+
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.response);
                     _this2.imageUrl = response.url;

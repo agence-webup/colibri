@@ -1,4 +1,5 @@
 "use strict";
+
 const BEFORE_UPLOAD = 1;
 const DURING_UPLOAD = 2;
 const AFTER_UPLOAD = 3;
@@ -11,7 +12,13 @@ const CSS = {
 
 class Colibri {
 
-    constructor(target) {
+    constructor(target, options = {}) {
+
+        this.options = options;
+
+        if(typeof options.onUploadComplete !== 'function') {
+            this.options.onUploadComplete = null;
+        }
 
         this.target = (typeof(target) === 'string') ? document.querySelector(target) : target;
         this.postUrl = this.target.dataset.post;
@@ -129,6 +136,12 @@ class Colibri {
         xhr.open('POST', this.postUrl, true);
 
         xhr.onload = () => {
+
+            // callback onUpload
+            if(this.options.onUploadComplete !== null) {
+                this.options.onUploadComplete(xhr.status, xhr.response);
+            }
+
             if (xhr.status === 200) {
                 let response = JSON.parse(xhr.response);
                 this.imageUrl = response.url;

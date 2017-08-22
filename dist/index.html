@@ -25,6 +25,10 @@
     <script src="colibri.js"></script>
 </body>
 <script>
-var colibri = new Colibri('.colibri');
+var colibri = new Colibri('.colibri', {
+    onUploadComplete: function(code, response) {
+        console.log(response);
+    }
+});
 </script>
 </html>
